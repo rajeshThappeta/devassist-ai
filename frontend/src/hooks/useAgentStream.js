@@ -32,10 +32,28 @@ export function useAgentStream() {
       dispatch({ type: 'SET_STATUS', payload: 'complete' });
     });
 
-    es.addEventListener('error', () => {
+    es.addEventListener('error', (e) => {
       es.close();
       esRef.current = null;
-      dispatch({ type: 'SET_ERROR', payload: 'Analysis failed. Check the repository URL and try again.' });
+
+      let message = 'Analysis failed. Check the repository URL and try again.';
+
+      if (e.data) {
+        try {
+          const { message: serverMsg = '' } = JSON.parse(e.data);
+          if (serverMsg.includes('Rate limit') || serverMsg.includes('429') || serverMsg.includes('rate_limit')) {
+            message = 'Groq rate limit reached — please wait a minute and try again.';
+          } else if (serverMsg.includes('not found') || serverMsg.includes('404')) {
+            message = 'Repository not found. Make sure the URL is correct and the repo is public.';
+          } else if (serverMsg.includes('maximum iterations')) {
+            message = 'Agent could not complete the analysis within the step limit. Try a more specific goal.';
+          } else if (serverMsg) {
+            message = serverMsg;
+          }
+        } catch {}
+      }
+
+      dispatch({ type: 'SET_ERROR', payload: message });
     });
   }
 
