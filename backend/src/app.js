@@ -6,12 +6,13 @@ import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+const allowedOrigin = (process.env.FRONTEND_URL || 'http://localhost:5173').trim();
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
 app.use('/api/analyze', analyzeRoutes);
 
-app.get('/health', (req, res) => res.json({ status: 'ok' }));
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 app.use(errorHandler);
 
