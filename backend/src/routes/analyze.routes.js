@@ -24,9 +24,9 @@ router.get('/', asyncHandler(
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL || '*');
   res.flushHeaders();
 
+  /** @param {string} eventType @param {object} data */
   const sendEvent = (eventType, data) => {
     res.write(`event: ${eventType}\n`);
     res.write(`data: ${JSON.stringify(data)}\n\n`);
@@ -38,6 +38,7 @@ router.get('/', asyncHandler(
     goal,
     owner,
     repo,
+    /** @param {object} step */
     onStep: (step) => sendEvent('step', step),
   });
 
