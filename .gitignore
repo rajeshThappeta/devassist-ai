@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# environment variables — never commit real keys
+.env
+.env.local
+.env.*.local
+
+# frontend build output
+frontend/dist/
+frontend/.vite/
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# editors
+.vscode/settings.json
+.idea/

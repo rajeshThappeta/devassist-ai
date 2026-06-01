@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: devassist-ai-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GROQ_API_KEY
+        sync: false          # set manually in Render dashboard
+      - key: GITHUB_TOKEN
+        sync: false          # optional — set for higher GitHub rate limits
+      - key: FRONTEND_URL
+        sync: false          # set to your Vercel URL after frontend is deployed
